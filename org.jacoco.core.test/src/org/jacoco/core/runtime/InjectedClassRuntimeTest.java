@@ -23,6 +23,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
+
 /**
  * Unit test for {@link InjectedClassRuntime}.
  */
@@ -54,6 +55,20 @@ public class InjectedClassRuntimeTest extends RuntimeTestBase {
 			createRuntime().startup(null);
 			fail("exception expected");
 		} catch (final InvocationTargetException e) {
+			e.printStackTrace();
+			for (Throwable t = e.getCause(); t != null; t = t.getCause()) {
+				System.err.println("Caused by:");
+				t.printStackTrace();
+			}
+			System.err.println("---------------------------------------------");
+			if (e.getCause() instanceof LinkageError) {
+				System.err.println("e.getCause() is LinkageError");
+			} else {
+				System.err.println("e.getCause() is not LinkageError!");
+			}
+			System.err.println("error message:");
+			System.err.println(e.getCause().getMessage());
+			System.err.println("---------------------------------------------");
 			assertTrue(e.getCause() instanceof LinkageError);
 			assertTrue(e.getCause().getMessage()
 					.contains("duplicate class definition"));
